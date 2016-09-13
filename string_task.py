@@ -25,6 +25,8 @@ def verbing(s):
 # Example output: 'This dinner is good!'
 def not_bad(s):
     index1 = s.find("not")
+    if index1 == -1:
+        return s
     index2 = s.find("bad")
     if index1 < index2:
         return s[:index1] + "good" + s[index2 + 3:]
@@ -42,12 +44,7 @@ def not_bad(s):
 # Example input: 'abcd', 'xy'
 # Example output: 'abxcdy'
 def front_back(a, b):
-    if len(a) % 2:
-        index_a = len(a) / 2 + 1
-    else:
-        index_a = len(a) / 2
-    if len(b) % 2:
-        index_b = len(b) / 2 + 1
-    else:
-        index_b = len(b) / 2
-    return a[:index_a] + b[:index_b] + a[index_a:] + b[index_b:]
+    len_a = (len(a) + 1) // 2
+    len_b = (len(b) + 1) // 2
+
+    return a[:len_a] + b[:len_b] + a[len_a:] + b[len_b:]
