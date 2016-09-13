@@ -35,7 +35,7 @@ def read_words(filename):
     words = []
     with open(filename, "r") as f:
         for line in f:
-            words.extend(line.lower().split())
+            words.extend(line.split())
     return words
 
 # Define print_words(filename) and print_top(filename) functions.
@@ -43,32 +43,31 @@ def read_words(filename):
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 
-def my_funk(filename):
+def words_to_dir(filename):
     lst = read_words(filename)
     dic = {}
     for x in lst:
-        if x not in dic:
-            dic[x] = lst.count(x)
+        if not x.islower():
+            x = x.lower()
+        if x in dic:
+            dic[x] += 1
+        else:
+            dic[x] = 1
     return dic
 
 ###
 def print_words(filename):
-    dic = my_funk(filename)
-    l = list(dic.keys())
-    l.sort()
-    for i in l:
-        print(i, dic[i])
+    dic = words_to_dir(filename)
+    dic = sorted(dic.items())
+    for word, num in dic:
+        print(word, num)
 
 
 def print_top(filename):
-    dic = my_funk(filename)
-    l = list(dic.keys())
-    l.sort()
-    j = 0
-    for i in reversed(l):
-        if(j < 20):
-            print(i,dic[i])
-            j += 1
+    dic = words_to_dir(filename)
+    dic = sorted(dic.keys(), reverse=True)
+    for word in dic[:20]:
+            print(word)
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 def main():
