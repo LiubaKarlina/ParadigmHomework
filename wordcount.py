@@ -48,10 +48,7 @@ def words_to_dir(filename):
     dic = {}
     for x in lst:
         x = x.lower()
-        if x in dic:
-            dic[x] += 1
-        else:
-            dic[x] = 1
+        dic[x] = dic.get(x, 0) + 1
     return dic
 
 ###
@@ -64,7 +61,7 @@ def print_words(filename):
 
 def print_top(filename):
     dic = words_to_dir(filename)
-    dic = sorted(dic.items(), key=lambda x: x[1], reverse=True)
+    dic = sorted(dic.items(), key=lambda x: -x[1])
     for word in dic[:20]:
             print(word[0])
 # This basic command line argument parsing code is provided and
