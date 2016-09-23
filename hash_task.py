@@ -23,15 +23,13 @@ def show_dic():
 
 
 def find_dubl(arg):
-    if len(sys.argv) != 2:
-        print('usage: ./d.py file')
-        sys.exit(1)
     for path in sys.argv[1:]:
         for root, _, files in os.walk(path):
             for name in files:
                 if name[0] != "." and name[0] != "~":
                     file_path = os.path.join(root, name)
-                    dir[make_hash(file_path)].append(file_path)
+                    if not os.path.islink(file_path):
+                      dir[make_hash(file_path)].append(file_path)
 
 def main():
     find_dubl(sys.argv)
