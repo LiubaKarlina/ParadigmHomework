@@ -19,7 +19,7 @@ def make_hash(filename):
 def show_dic():
     for v in dir.values():
         if len(v) > 1:
-            print(*v, sep = ":")
+            print(":".join(v))
 
 
 def find_dubl(arg):
@@ -28,8 +28,9 @@ def find_dubl(arg):
             for name in files:
                 if name[0] != "." and name[0] != "~":
                     file_path = os.path.join(root, name)
+                    path = os.path.abspath(file_path)
                     if not os.path.islink(file_path):
-                      dir[make_hash(file_path)].append(file_path)
+                      dir[make_hash(file_path)].append(path)
 
 def main():
     find_dubl(sys.argv)
