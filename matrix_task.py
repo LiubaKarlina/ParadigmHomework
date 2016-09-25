@@ -38,10 +38,10 @@ def main():
 
     for i in range(n):
         a.append(list(map(int, input().split())))
-    a = np.matrix(a)
+    a = np.array(a)
     for i in range(n):
         b.append(list(map(int, input().split())))
-    b = np.matrix(b)
+    b = np.array(b)
 
     if (n & (n - 1)) != 0:
         new_size = 2 ** (int(math.log2(n)) + 1)
@@ -52,9 +52,13 @@ def main():
 
     d = mul_matr(a, b)
     d = d[:n, :n]
-
     for i in d:
-        print(' '.join(list(map(str, i))))
+        for x in i:
+          print(int(x), end = " ")
+        print()
+
+    #for i in d:
+    #    print(' '.join(list(map(str, i))))
 
 
 if __name__ == "__main__":
