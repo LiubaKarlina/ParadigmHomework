@@ -47,6 +47,11 @@ def get_resize_matrix(n):
     matrix[:n, :n] = get_matrix(n)
     return matrix
 
+def show_matrix(matr):
+    for row in matr:
+        print(' '.join(list(map(str, row))))
+
+
 def main():
     n = int(input())
 
@@ -55,10 +60,7 @@ def main():
 
     d = mul_matr(matrix1, matrix2)
     d = d[:n, :n]
-
-    for i in d:
-        print(' '.join(list(map(str, i))))
-
+    show_matrix(d)
 
 if __name__ == "__main__":
     main()
