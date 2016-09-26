@@ -3,7 +3,7 @@ import math
 
 def mul_matr(a, b):
     n = len(a)
-    result = np.empty((n,n), dtype = int)
+    result = np.empty((n,n), dtype = a.dtype)
     if n < 4:
         return a.dot(b)
     n = n // 2
@@ -55,7 +55,6 @@ def main():
 
     d = mul_matr(matrix1, matrix2)
     d = d[:n, :n]
-    print(matrix1.dot(matrix2))
 
     for i in d:
         print(' '.join(list(map(str, i))))
