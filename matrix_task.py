@@ -31,36 +31,33 @@ def mul_matr(a, b):
 
     return np.vstack((np.hstack((c11,c12)), np.hstack((c21,c22))))
 
-def main():
-    n = int(input())
+def get_matrix(n):
     a = []
-    b = []
 
     for i in range(n):
         a.append(list(map(int, input().split())))
-    a = np.array(a)
-    for i in range(n):
-        b.append(list(map(int, input().split())))
-    b = np.array(b)
+    return np.array(a)
 
+def get_resize_matrix(n):
+    new_size = n
     if (n & (n - 1)) != 0:
-        new_size = 2 ** (int(math.log2(n)) + 1)
-        a = np.hstack((a, np.zeros((n,new_size - n))))
-        a = np.vstack((a, np.zeros((new_size - n,new_size))))
-        b = np.hstack((b, np.zeros((n,new_size - n))))
-        b = np.vstack((b, np.zeros((new_size - n,new_size))))
+        new_size = 2 ** (n.bit_length())
+    matrix = np.zeros((new_size, new_size), dtype=int)
+    matrix[:n, :n] = get_matrix(n)
+    return matrix
 
-    d = mul_matr(a, b)
+def main():
+    n = int(input())
+
+    matrix1 = get_resize_matrix(n)
+    matrix2 = get_resize_matrix(n)
+
+    d = mul_matr(matrix1, matrix2)
     d = d[:n, :n]
-    for i in d:
-        for x in i:
-          print(int(x), end = " ")
-        print()
 
-    #for i in d:
-    #    print(' '.join(list(map(str, i))))
+    for i in d:
+        print(' '.join(list(map(str, i))))
 
 
 if __name__ == "__main__":
     main()
-
