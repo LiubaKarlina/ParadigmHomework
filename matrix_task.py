@@ -3,9 +3,10 @@ import math
 
 def mul_matr(a, b):
     n = len(a)
+    result = np.empty((n,n), dtype = int)
     if n < 4:
         return a.dot(b)
-    n = int(n / 2 )
+    n = n // 2
     a11 = a[:n,:n]
     a12 = a[:n, n:]
     a21 = a[ n:, :n]
@@ -24,19 +25,19 @@ def mul_matr(a, b):
     t6 = mul_matr(a21 - a11, b11 + b12)
     t7 = mul_matr(a12 - a22, b21 + b22)
 
-    c11 = t1 + t4 - t5 + t7
-    c21 = t2 + t4
-    c12 = t3 + t5
-    c22 = t1 + t3 - t2 + t6
-
-    return np.vstack((np.hstack((c11,c12)), np.hstack((c21,c22))))
+    result[:n, :n] = t1 + t4 - t5 + t7
+    result[:n, n:2 * n] = t3 + t5
+    result[n:n * 2, :n] = t2 + t4
+    result[n:2 * n, n:2 * n] = t1 + t3 - t2 + t6
+    return result
 
 def get_matrix(n):
-    a = []
+    a = np.empty((n,n))
 
     for i in range(n):
-        a.append(list(map(int, input().split())))
-    return np.array(a)
+        a[i] = list(map(int, input().split()))
+
+    return a
 
 def get_resize_matrix(n):
     new_size = n
@@ -54,6 +55,7 @@ def main():
 
     d = mul_matr(matrix1, matrix2)
     d = d[:n, :n]
+    print(matrix1.dot(matrix2))
 
     for i in d:
         print(' '.join(list(map(str, i))))
