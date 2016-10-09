@@ -95,7 +95,7 @@ class BinaryOperation:
         '+': lambda x, y: x + y,
         '-': lambda x, y: x - y,
         '*': lambda x, y: x * y,
-        '/': lambda x, y: x / y,
+        '/': lambda x, y: x // y,
         '%': lambda x, y: x % y,
         '&&': lambda x, y: x and y,
         '||': lambda x, y: x or y,
@@ -138,22 +138,22 @@ def main():
     parent = Scope()
     parent["foo"] = Function(('hello', 'world'),
                              [Print(BinaryOperation(Reference('hello'),
-                                                    '+',
+                                                    '%',
                                                    Reference('world')))])
     parent["bar"] = Number(10)
     scope = Scope(parent)
     assert 10 == scope["bar"].value
     scope["bar"] = Number(20)
     assert scope["bar"].value == 20
-    #print('It should print 2: ', end=' ')
+    print('It should print 2: ', end=' ')
     prtrue = Print(UnaryOperation('!', Number(0)))
     prfalse = Print(UnaryOperation('!', Number(1)))
-    con = Conditional(Number(1), [prtrue], [prfalse])
-    con.evaluate(scope)
+    #con = Conditional(Number(1), [prtrue], [prfalse])
+    #con.evaluate(scope)
 
     #pr.evaluate(scope)
-    #FunctionCall(FunctionDefinition('foo', parent['foo']),
-    #             [Number(5), UnaryOperation('-', Number(3))]).evaluate(scope)
+    FunctionCall(FunctionDefinition('foo', parent['foo']),
+                 [Number(5), Number(3)]).evaluate(scope)
 
 if __name__ == "__main__":
     main()
