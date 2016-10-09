@@ -58,16 +58,16 @@ class Print:
     def __init__(self, expr):
         self.expr = expr
     def evaluate(self, scope):
-        value = self.expr.evaluate(scope).value
-        print(value)
-        return value
+        Number = self.expr.evaluate(scope)
+        print(Number.value)
+        return Number
 
 class Read:
     def __init__(self, name):
         self.name = name
     def evaluate(self, scope):
         n = int(input())
-        scope[self.name] = n
+        scope[self.name] = Number(n)
         return scope[self.name]
 
 
@@ -147,10 +147,12 @@ def main():
     assert scope["bar"].value == 20
     print('It should print 2: ', end=' ')
     prtrue = Print(UnaryOperation('!', Number(0)))
+    print(prtrue.evaluate(scope).value)
     prfalse = Print(UnaryOperation('!', Number(1)))
     #con = Conditional(Number(1), [prtrue], [prfalse])
     #con.evaluate(scope)
-
+    r = Read("lo")
+    print(r.evaluate(parent).value)
     #pr.evaluate(scope)
     FunctionCall(FunctionDefinition('foo', parent['foo']),
                  [Number(5), Number(3)]).evaluate(scope)
