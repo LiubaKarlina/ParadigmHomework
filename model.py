@@ -44,12 +44,14 @@ class Conditional:
     def evaluate(self, scope):
         res = None
         if self.condtion.evaluate(scope).value:
-            for i in self.if_true:
-                res = i.evaluate(scope)
+            if self.if_true:
+                for i in self.if_true:
+                    res = i.evaluate(scope)
             return res
         else:
-            for i in self.if_false:
-                res = i.evaluate(scope)
+            if self.if_false:
+                for i in self.if_false:
+                    res = i.evaluate(scope)
             return res
 
 class Print:
@@ -143,10 +145,10 @@ def main():
     assert 10 == scope["bar"].value
     scope["bar"] = Number(20)
     assert scope["bar"].value == 20
-    print('It should print 2: ', end=' ')
-    prtrue = Print(UnaryOperation('-', Number(0)))
-    prfalse = Print(UnaryOperation('-', Number(1)))
-    con = Conditional(Number(1),[prtrue],[prfalse])
+    #print('It should print 2: ', end=' ')
+    prtrue = Print(UnaryOperation('!', Number(0)))
+    prfalse = Print(UnaryOperation('!', Number(1)))
+    con = Conditional(Number(1), [prtrue], [prfalse])
     con.evaluate(scope)
 
     #pr.evaluate(scope)
