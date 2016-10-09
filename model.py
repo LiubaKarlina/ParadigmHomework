@@ -38,17 +38,17 @@ class FunctionDefinition:
 
 class Conditional:
     def __init__(self, condtion, if_true, if_false = None):
-        self.condtion = condition
+        self.condtion = condtion
         self.if_true = if_true
         self.if_false = if_false
     def evaluate(self, scope):
         res = None
-        if self.condition.evaluate(scope).value:
-            for i in if_true:
+        if self.condtion.evaluate(scope).value:
+            for i in self.if_true:
                 res = i.evaluate(scope)
             return res
         else:
-            for i in if_false:
+            for i in self.if_false:
                 res = i.evaluate(scope)
             return res
 
@@ -116,7 +116,7 @@ class UnaryOperation:
 
     comand = {
         '-': lambda x: -x,
-        '!': lambda x: not x
+        '!': lambda x: 0 if x else 1
     }
     def __init__(self, op, expr):
         self.op = op
@@ -144,10 +144,14 @@ def main():
     scope["bar"] = Number(20)
     assert scope["bar"].value == 20
     print('It should print 2: ', end=' ')
-    #pr = Print(UnaryOperation('-', Number(3)))
+    prtrue = Print(UnaryOperation('-', Number(0)))
+    prfalse = Print(UnaryOperation('-', Number(1)))
+    con = Conditional(Number(1),[prtrue],[prfalse])
+    con.evaluate(scope)
+
     #pr.evaluate(scope)
-    FunctionCall(FunctionDefinition('foo', parent['foo']),
-                 [Number(5), UnaryOperation('-', Number(3))]).evaluate(scope)
+    #FunctionCall(FunctionDefinition('foo', parent['foo']),
+    #             [Number(5), UnaryOperation('-', Number(3))]).evaluate(scope)
 
 if __name__ == "__main__":
     main()
