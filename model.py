@@ -5,12 +5,11 @@ class Scope(object):
     def __getitem__(self, key):
         if key not in self.dict:
             if self.parent:
-                return self.parent.dict[key]
-        return self.dict[key]
+                return self.parent[key]
+        else:
+            return self.dict[key]
     def __setitem__(self, key, value):
             self.dict[key] = value
-    def __delitem__(self, key):
-        del self.dict[key]
 
 class Number:
     def __init__(self, value):
