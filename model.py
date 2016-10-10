@@ -43,23 +43,21 @@ class Conditional:
     def evaluate(self, scope):
         res = None
         if self.condtion.evaluate(scope).value:
-            if self.if_true:
-                for i in self.if_true:
-                    res = i.evaluate(scope)
-            return res
+            to_do = self.if_true
         else:
-            if self.if_false:
-                for i in self.if_false:
-                    res = i.evaluate(scope)
-            return res
+            to_do = self.if_false
+        if to_do:
+            for com in to_do:
+                res = com.evaluate(scope)
+        return res
 
 class Print:
     def __init__(self, expr):
         self.expr = expr
     def evaluate(self, scope):
-        Number = self.expr.evaluate(scope)
-        print(Number.value)
-        return Number
+        number = self.expr.evaluate(scope)
+        print(number.value)
+        return number
 
 class Read:
     def __init__(self, name):
@@ -77,10 +75,9 @@ class FunctionCall:
     def evaluate(self, scope):
         self.function = self.fun_expr.evaluate(scope)
         self.call_scope = Scope(scope)
-        i = 0
-        for arg in self.args:
-            self.call_scope[self.function.args[i]] = arg.evaluate(scope)
-            i += 1
+        all = zip(self.function.args, self.args)
+        for arg, name_arg in all:
+            self.call_scope[name_arg] = arg.evaluate(scope)
         return self.function.evaluate(self.call_scope)
 
 class Reference:
