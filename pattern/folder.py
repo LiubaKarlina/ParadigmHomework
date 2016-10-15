@@ -1,4 +1,5 @@
 import yat.model
+from printer import *
 from yat.model import *
 
 class ConstantFolder:
@@ -6,7 +7,7 @@ class ConstantFolder:
         return tree.visit(self)
 
     def visitNumber(self, number):
-        return number
+        return Number(number.value)
 
     def visitFunction(self, function):
         body = list()
@@ -30,7 +31,7 @@ class ConstantFolder:
         right = binary.rhs.visit(self)
         if type(left) is Number:
             if type(right) is Number:
-                return binary.evaluate(Scope())
+                return BinaryOperation(left, binary.op, right).evaluate(Scope())
             elif binary.op == '*':
                 if left.value == 0 and type(right) is Reference:
                     return Number(0)
@@ -40,31 +41,36 @@ class ConstantFolder:
         elif binary.op == '-' and type(left) is Reference and type(right) is Reference:
             if left.name == right.name:
                 return Number(0)
-        return binary
+        return BinaryOperation(left, binary.op, right)
 
 
     def visitUnaryOperation(self, unary):
-        if type(unary.expr) is Number:
-            return unary.evaluate(Scope())
+        expr = unary.expr.visit(self)
+        if type(expr) is Number:
+            return UnaryOperation(unary.op, expr).evaluate(Scope())
+        return UnaryOperation(unary.op, expr)
 
     def visitConditional(self, cond):
-        cond.condtion = cond.condtion.visit(self)
+        condtion = cond.condtion.visit(self)
+        true = list()
+        false = list()
         if (cond.if_true):
             for i in cond.if_true:
-                i = i.visit(self)
+                true.append(i.visit(self))
             if (cond.if_false):
                 for i in cond.if_false:
-                    i = i.visit(self)
-        return cond
+                    false.append(i.visit(self))
+        return Conditional(condtion, true, false)
 
     def visitReference(self, reference):
-        return reference
+        return Reference(reference.name)
 
     def visitPrint(self, prin):
-        return prin.expr.visit(self)
+        expr = prin.expr.visit(self)
+        return Print(expr)
 
     def visitRead(self, read):
-        return read
+        return Read(read.name)
 
 
 def main():
@@ -85,14 +91,19 @@ def main():
                               ])
     fd = FunctionDefinition('foo', parent['foo'])
     function = Function(['hello'], [UnaryOperation('-', Reference('hello')), con, con1])
-    definition = FunctionDefinition('foo', function)
+    definition = FunctionDefinition('foo', parent["foo"])
     p = Read('xox')
     un = UnaryOperation('!', Number(0))
     funcall = FunctionCall(definition,
                            [Number(5)])
     reference = model.Reference('foo')
     call = FunctionCall(BinaryOperation(Number(1), '*', Number(3)), [Number(1), Number(2), Number(3)])
-    rer = f.visit(call)
+    un = UnaryOperation('-', Reference('hello'))
+    rer = f.visit(fd)
+    pg = PrettyPrinter()
+    pg.visit(fd)
+    un = UnaryOperation('+', Reference('hello'))
+    pg.visit(rer)
 
 if __name__ == "__main__":
     main()
