@@ -1,5 +1,4 @@
 import yat.model
-from printer import *
 from yat.model import *
 
 class ConstantFolder:
@@ -100,10 +99,10 @@ def main():
     call = FunctionCall(BinaryOperation(Number(1), '*', Number(3)), [Number(1), Number(2), Number(3)])
     un = UnaryOperation('-', Reference('hello'))
     rer = f.visit(fd)
-    pg = PrettyPrinter()
-    pg.visit(fd)
+    #pg = PrettyPrinter()
+    #pg.visit(fd)
     un = UnaryOperation('+', Reference('hello'))
-    pg.visit(rer)
+    #pg.visit(rer)
 
 if __name__ == "__main__":
     main()
