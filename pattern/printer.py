@@ -81,11 +81,7 @@ class PrettyPrinter:
 
 
 def main():
-    p = PrettyPrinter()
-    p.visit(model.UnaryOperation("!", model.Number(6)))
-    bo2 = model.BinaryOperation(model.FunctionCall(model.Reference('foo'), [model.BinaryOperation(model.Reference('o'), '*', model.Number(0)), model.Number(10), model.Number(100)]), '*', model.Reference('i'))
-    func = model.FunctionDefinition('hard', model.Function(['a', 'b', 'c', 'd'], [model.UnaryOperation('-', model.Number(0)), model.BinaryOperation(model.Reference('a'), '*', model.Number(1)), model.Number(0), model.Conditional(model.Number(0), [], [bo2])]))
-    p.visit(bo2)
+    pass
 
 if __name__ == "__main__":
     main()

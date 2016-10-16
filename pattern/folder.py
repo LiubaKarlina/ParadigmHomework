@@ -1,4 +1,4 @@
-import yat.model
+import yat.model as model
 
 
 class ConstantFolder:
