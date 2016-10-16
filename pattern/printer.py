@@ -1,6 +1,7 @@
 import yat.model
 from yat.model import *
 class PrettyPrinter:
+
     def __init__(self):
         self.tab = 0
 
@@ -40,7 +41,8 @@ class PrettyPrinter:
                 self.print_tab()
                 i.visit(self)
                 print(';')
-        self.tab -= 1
+            self.tab -= 1
+        self.print_tab()
         print('}',end='')
 
     def visitBinaryOperation(self, binary):
@@ -96,13 +98,14 @@ def main():
     pr = PrettyPrinter()
     #pr.visit(l)
     con = Conditional(Number(1), [Number(1), Number(1)], [Number(3)])
-    con1 = Conditional(Number(1), [], [])
+    con1 = Conditional(Number(1), [con, con], [])
     parent = Scope()
     parent["foo"] = Function(('hello', 'world'),
                              [Print(BinaryOperation(Reference('hello'),
                                                     '%',
                                                     Reference('world'))),
-                              Read('hello')
+                              Read('hello'), con,
+                              FunctionDefinition('mi',Function(('x'), [Read('x'), con,con1]))
                               ])
     fd = FunctionDefinition('foo', parent['foo'])
     function = Function(['hello'], [UnaryOperation('-',Reference('hello')), con, con1])
