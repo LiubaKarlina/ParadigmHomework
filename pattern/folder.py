@@ -30,7 +30,7 @@ class ConstantFolder:
         if type(left) is model.Number:
             if type(right) is model.Number:
                 return model.BinaryOperation(left, binary.op,
-                                             right).evaluate(Scope())
+                                             right).evaluate(model.Scope())
             elif binary.op == '*':
                 if left.value == 0 and type(right) is model.Reference:
                     return model.Number(0)
