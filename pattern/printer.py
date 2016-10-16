@@ -1,5 +1,4 @@
-import model
-from model import *
+import yat.model
 
 
 class PrettyPrinter:
@@ -16,6 +15,15 @@ class PrettyPrinter:
 
     def visitNumber(self, number):
         print(number.value, end='')
+
+    def forn(self, for_iter):
+        if for_iter:
+            self.tab += 1
+            for comand in for_iter:
+                self.print_tab()
+                comand.visit(self)
+                print(';')
+            self.tab -= 1
 
     def visitFunctionCall(self, function_call):
         function_call.fun_expr.visit(self)
@@ -34,18 +42,11 @@ class PrettyPrinter:
         if fun.args:
             print(','.join(fun.args), end='')
         print(') {')
-        if fun.body:
-            self.tab += 1
-            for i in fun.body:
-                self.print_tab()
-                i.visit(self)
-                print(';')
-            self.tab -= 1
+        self.forn(fun.body)
         self.print_tab()
         print('}', end='')
 
     def visitBinaryOperation(self, binary):
-        self.need = True
         print('(', end='')
         binary.lhs.visit(self)
         print(' ' + binary.op + ' ', end='')
@@ -56,15 +57,6 @@ class PrettyPrinter:
         print(unary.op + '(', end='')
         unary.expr.visit(self)
         print(')', end='')
-
-    def forn(self, for_iter):
-        if for_iter:
-            self.tab += 1
-            for comand in for_iter:
-                self.print_tab()
-                comand.visit(self)
-                print(';')
-            self.tab -= 1
 
     def visitConditional(self, cond):
         print('if (', end='')
@@ -89,7 +81,11 @@ class PrettyPrinter:
 
 
 def main():
-    pass
+    p = PrettyPrinter()
+    p.visit(model.UnaryOperation("!", model.Number(6)))
+    bo2 = model.BinaryOperation(model.FunctionCall(model.Reference('foo'), [model.BinaryOperation(model.Reference('o'), '*', model.Number(0)), model.Number(10), model.Number(100)]), '*', model.Reference('i'))
+    func = model.FunctionDefinition('hard', model.Function(['a', 'b', 'c', 'd'], [model.UnaryOperation('-', model.Number(0)), model.BinaryOperation(model.Reference('a'), '*', model.Number(1)), model.Number(0), model.Conditional(model.Number(0), [], [bo2])]))
+    p.visit(bo2)
 
 if __name__ == "__main__":
     main()

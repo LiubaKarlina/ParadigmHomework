@@ -1,6 +1,4 @@
-import model
-from printer import *
-from model import *
+import yat.model
 
 
 class ConstantFolder:
@@ -8,7 +6,7 @@ class ConstantFolder:
         return tree.visit(self)
 
     def visitNumber(self, number):
-        return Number(number.value)
+        return model.Number(number.value)
 
     def make(self, old_l):
         new_l = list()
@@ -19,56 +17,57 @@ class ConstantFolder:
 
     def visitFunctionCall(self, function_call):
         args = self.make(function_call.args)
-        return FunctionCall(function_call.fun_expr.visit(self), args)
+        return model.FunctionCall(function_call.fun_expr.visit(self), args)
 
     def visitFunctionDefinition(self, function_def):
         body = self.make(function_def.function.body)
-        return FunctionDefinition(
-            function_def.name, Function(function_def.function.args, body))
+        return model.FunctionDefinition(function_def.name,
+                                        model.Function(function_def.function.args, body))
 
     def visitBinaryOperation(self, binary):
         left = binary.lhs.visit(self)
         right = binary.rhs.visit(self)
-        if type(left) is Number:
-            if type(right) is Number:
-                return BinaryOperation(left, binary.op,
-                                       right).evaluate(Scope())
+        if type(left) is model.Number:
+            if type(right) is model.Number:
+                return model.BinaryOperation(left, binary.op,
+                                             right).evaluate(Scope())
             elif binary.op == '*':
-                if left.value == 0 and type(right) is Reference:
-                    return Number(0)
-        elif type(right) is Number and binary.op == '*':
-            if right.value == 0 and type(left) is Reference:
-                return Number(0)
+                if left.value == 0 and type(right) is model.Reference:
+                    return model.Number(0)
+        elif type(right) is model.Number and binary.op == '*':
+            if right.value == 0 and type(left) is model.Reference:
+                return model.Number(0)
         elif binary.op == '-':
-            if type(left) is Reference and type(right) is Reference:
+            if type(left) is model.Reference and type(right) is model.Reference:
                 if left.name == right.name:
-                    return Number(0)
-        return BinaryOperation(left, binary.op, right)
+                    return model.Number(0)
+        return model.BinaryOperation(left, binary.op, right)
 
     def visitUnaryOperation(self, unary):
         expr = unary.expr.visit(self)
-        if type(expr) is Number:
-            return UnaryOperation(unary.op, expr).evaluate(Scope())
-        return UnaryOperation(unary.op, expr)
+        if type(expr) is model.Number:
+            return model.UnaryOperation(unary.op, expr).evaluate(model.Scope())
+        return model.UnaryOperation(unary.op, expr)
 
     def visitConditional(self, cond):
-        condtion = cond.condtion.visit(self)
         true = self.make(cond.if_true)
         false = self.make(cond.if_false)
-        return Conditional(condtion, true, false)
+        return model.Conditional(cond.condtion.visit(self), true, false)
 
     def visitReference(self, reference):
-        return Reference(reference.name)
+        return model.Reference(reference.name)
 
     def visitPrint(self, prin):
-        return Print(prin.expr.visit(self))
+        return model.Print(prin.expr.visit(self))
 
     def visitRead(self, read):
-        return Read(read.name)
+        return model.Read(read.name)
 
 
 def main():
-    print("None")
+    f = ConstantFolder()
+    n = f.visit(model.UnaryOperation("-", model.Number(6)))
+    print(n.value)
 
 if __name__ == "__main__":
     main()
