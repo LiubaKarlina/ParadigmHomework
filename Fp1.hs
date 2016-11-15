@@ -28,9 +28,11 @@ foldl' f z (x:xs) = foldl' f (f z x) xs
 -- 7. concat' принимает на вход два списка и возвращает их конкатенацию (0,5)
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
-concat' a b = a ++ b
+concat' [] a = a
+concat' a [] = a
+concat' a b = head' a : concat' (tail' a) b
 -- 8. quickSort' возвращает его отсортированный список (0,5)
 quickSort' :: Ord a => [a] -> [a]
 quickSort' [] = []
-quickSort' (x:xs) = quickSort'[y|y<-xs, y <= x] ++ [x] ++ quickSort'[y|y<-xs, y > x] 
+quickSort' (x:xs) = concat' (quickSort'(filter' (<= x) xs)) (x : (quickSort'(filter' (> x) xs))) 
 
