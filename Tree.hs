@@ -26,18 +26,16 @@ insert k v (Node tk tv left right)
                    | k < tk  = (Node tk tv (insert k v left) right)
                    | otherwise  = (Node tk tv left (insert k v right))
 
+siftUp :: BinaryTree k v -> BinaryTree k v
+siftUp (Node k v Empty Empty) = Empty
+siftUp (Node k v Empty (Node rk rv left right)) = (Node rk rv left right)
+siftUp (Node k v (Node lk lv left right) Empty) = (Node lk lv left right)
+siftUp (Node k v (Node lk lv left right) r) = (Node lk lv (siftUp left) r)
+
 delete :: Ord k => k -> BinaryTree k v -> BinaryTree k v
 delete k Empty = Empty
-delete k (Node tk tv Empty right)
-                   | k == tk   = right
-                   | k < tk    = (Node tk tv Empty right)
-                   | otherwise = (Node tk tv Empty (delete k right))
-delete k (Node tk tv left Empty)
-                   | k == tk   = left
-                   | k < tk    = (Node tk tv (delete k left) Empty)
-                   | otherwise = (Node tk tv left            Empty) 
 delete k (Node tk tv left right)
                    | k < tk    = (Node tk tv (delete k left) right)
                    | k > tk    = (Node tk tv left (delete k right))
-                   | otherwise = (Node (key left) (value left) (delete (key left) left) right) 
+                   | otherwise = (siftUp (Node tk tv left right)) 
 
