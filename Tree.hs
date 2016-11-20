@@ -27,8 +27,8 @@ insert k v (Node tk tv left right)
                    | otherwise  = (Node tk tv left (insert k v right))
 
 siftUp :: BinaryTree k v -> BinaryTree k v
-siftUp (Node k v Empty Empty) = Empty
-siftUp (Node k v Empty (Node rk rv left right)) = (Node rk rv left right)
+siftUp (Node k v Empty right) = right
+siftUp (Node k v left Empty) = left
 siftUp (Node k v left right) = (Node (key left) (value left) (siftUp left) right)
 
 delete :: Ord k => k -> BinaryTree k v -> BinaryTree k v
